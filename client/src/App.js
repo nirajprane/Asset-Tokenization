@@ -4,10 +4,19 @@ import MyTokenSale from "./contracts/MyTokenSale.json";
 import KycContract from "./contracts/KycContract.json";
 import getWeb3 from "./getWeb3";
 
+import BenefitsCard from '../src/components/pages/BenefitsCard';
+// import { red,green,blue, } from '@mui/material/colors';
+
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import Hero from "./components/pages/Hero";
+
 import "./App.css";
 
 class App extends Component {
-  state = { loaded: false, kycAddress: "0x123", tokenSaleAddress: "", userTokens: 0 };
+  state = { loaded: false,  kycAddress: "", tokenSaleAddress: "", userTokens: 0 };
 
     componentDidMount = async () => {
       try {
@@ -69,16 +78,16 @@ class App extends Component {
     this.setState({
     [name]: value
     });
-  };
+};
 
-  handleKycSubmit = async () => {
+handleKycSubmit = async () => {
     const {kycAddress} = this.state;
     await this.kycContract.methods.setKycCompleted(kycAddress).send({from: this.accounts[0]});
     alert("Account "+kycAddress+" is now whitelisted");
-  };
+};
 
   handleBuyToken = async () => {
-    await this.myTokenSale.methods.buyTokens(this.accounts[0]).send({from: this.accounts[0], value: 1});
+    await this.myTokenSale.methods.buyTokens(this.accounts[0]).send({from: this.accounts[0], value: 10});
   };
 
   updateUserTokens = async() => {
@@ -95,19 +104,69 @@ class App extends Component {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="App">
-        <h1>Capuccino Token for StarDucks</h1>
-      
-        <h2>Enable your account</h2>
-        Address to allow: <input type="text" name="kycAddress" value={this.state.kycAddress} onChange={this.handleInputChange} />
-        <button type="button" onClick={this.handleKycSubmit}>Add Address to Whitelist</button>
-        <h2>Buy Cappucino-Tokens</h2>
-        <p>Send Ether to this address: {this.state.tokenSaleAddress}</p>
-        <p>You have: {this.state.userTokens}</p>
-        <button type="button" onClick={this.handleBuyToken}>Buy more tokens</button>
-      </div>
+      // <div className="App">
+      <Container>
+              <Grid container className="first-section">
+                  <h1>What is Asset Tokenization ?</h1>
+                  <Hero/>
+              </Grid>
+              <Grid container className="second-section">
+              <Grid  item xs={12} md={6} className="second-section-left">
+                <h2>Crowdsale Address :</h2>
+                
+              
+                
+              <h3>{this.state.tokenSaleAddress}</h3>  
+              <br></br>
+                  
+                
+              </Grid>
+              <Grid item xs={12} md={6}  className="second-section-right">
+              <h2>Complete Your KYC </h2>
+              <TextField 
+                className="kyc-textfield"
+                variant="outlined"
+                size="small"
+                id="outlined-name"
+                name="kycAddress"
+                label="Enter Your Address for whitelisting"
+
+                value={this.state.kycAddress}
+                onChange={this.handleInputChange}
+              />
+              <h3></h3>
+              <Button 
+                fullwidth
+                sx={{ borderRadius:"25px",width:"150px", }}
+                className="kyc-button"
+                variant="outlined" 
+                size="large"
+                onClick={this.handleKycSubmit}>
+                Send
+              </Button>
+
+              <h3> Your Account has : {this.state.userTokens} Tokens</h3>
+              <Button 
+                fullwidth
+                sx={{ borderRadius:"25px" }}
+                className="kyc-button"
+                variant="outlined" 
+                size="large"
+                onClick={this.handleBuyToken}>
+                Buy More Tokens
+              </Button>  
+              </Grid> 
+              </Grid>
+          <Grid container className="third-section">
+              <h1>General Benefits of Tokenization</h1>
+              <BenefitsCard/>
+          </Grid>
+      </Container>
+              
     );
   }
 }
 
 export default App;
+
+
